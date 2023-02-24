@@ -25,11 +25,7 @@ def symmetric_residue(a, m):
 def crt(m, v, symmetric=False, check=True):
     r"""Chinese Remainder Theorem.
 
-    The moduli in m are assumed to be pairwise coprime.  The output
-    is then an integer f, such that f = v_i mod m_i for each pair out
-    of v and m. If ``symmetric`` is False a positive integer will be
-    returned, else \|f\| will be less than or equal to the LCM of the
-    moduli, and thus f may be negative.
+    For any two prime integers 
 
     If the moduli are not co-prime the correct result will be returned
     if/when the test of the result is found to be incorrect. This result
@@ -132,7 +128,7 @@ def crt2(m, v, mm, e, s, symmetric=False):
         return symmetric_residue(result, mm), mm
     return result, mm
 
-
+        
 def solve_congruence(*remainder_modulus_pairs, **hint):
     """Compute the integer ``n`` that has the residual ``ai`` when it is
     divided by ``mi`` where the ``ai`` and ``mi`` are given as pairs to
@@ -253,3 +249,51 @@ def solve_congruence(*remainder_modulus_pairs, **hint):
         if symmetric:
             return symmetric_residue(n, m), m
         return n, m
+    
+    
+    
+    
+    
+
+def chicken_mc(m, v,check=True):
+      r"""Chicken McNugget Theorm (Frobenius Coin Problem).
+
+    for any two relatively prime integers m and n,
+    the largest integer that cannot be expressed in the form am + bn 
+    for non-negative integers a and b is mn − m − n.
+
+    If the a, b are co-prime the correct result will be returned
+    else the return value will be None if there is no solution.
+
+    Examples
+    ========
+
+    As an example consider two numbers ``M = 5``
+    ``V = 9``. Then we have::
+
+       >>> from sympy.ntheory.modular import chicken_mc
+
+       >>> chicken_mc(5, 9)
+       31
+
+
+    If the moduli are not co-prime, you may receive an incorrect result
+    if you use ``check=False``:
+
+       >>> chicken_mc(4, 2,check=False)
+       2
+       >>> chicken_mc(4, 2) is None
+       True
+
+    """
+    def gcdExtended(a, b):
+        # Base Case
+        if a == 0 :
+            return b
+        return gcdExtended(b%a, a)
+    
+    result = m*v - (m+v)
+    if gcdExtended(m, v)!=1 and check : 
+        return None
+    return result
+        
